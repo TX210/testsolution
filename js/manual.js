@@ -9,11 +9,7 @@ $(document).ready(function () {
             parent: parent
         }).done(function (data) {
             $("#company_view").click();
-        });
-        $.post("ajax/money_set.php", {
-        }).done(function (data) {
-            alert(data);
-        });
+        });    
     });
     $("#company_view").click(function () {
         $.post("ajax/companies_get.php", {}).done(function (data) {
@@ -24,12 +20,23 @@ $(document).ready(function () {
                 if (max_level < json[i][5]) {
                     max_level = +json[i][5]
                 }
-            }            
+            } 
+            for (j = max_level; j > 0; j--) {
+                for (i = 0; i < Object.keys(json).length; i++) {
+                    if (j == json[i][5]) {
+                        for (k = 0; k < Object.keys(json).length; k++) {
+                            if (json[i][4] == json[k][0]) {
+                                json[k][3] = Number(json[k][3]) + Number(json[i][3]);
+                            }
+                        }
+                    }
+                }
+            }             
             for (j = 0; j < max_level + 1; j++) {
                 for (i = 0; i < Object.keys(json).length; i++) {
                     
-                    var parent_card = "<div class=\"col s12 l4 offset-l4\"><div class=\"card\"><div class=\"card-content\" id=\"" + json[i][0] + "\"><span class=\"card-title\">" + json[i][1] + " " + json[i][2]+"K" +"<a class=\"waves-effect waves-teal btn-flat edit\" id=\"edit_" + json[i][0] + "\">edit<id>_"+ json[i][0] +"_</id></a><a class=\"waves-effect waves-teal btn-flat delete\" id=\"delete_" + json[i][0] + "\">delete<id>_"+ json[i][0] +"_</id></a></span></div></div></div>";
-                    var child_card = "<div class=\"row\"><div class=\"col s12\"><div class=\"card\"><div class=\"card-content\" id=\"" + json[i][0] + "\"><span class=\"card-title\">" + json[i][1] + " " + json[i][2]+"K"+"<a class=\"waves-effect waves-teal btn-flat edit\" id=\"edit_" + json[i][0] + "\">edit<id>_"+ json[i][0] +"_</id></a><a class=\"waves-effect waves-teal btn-flat delete\" id=\"delete_" + json[i][0] + "\">delete<id>_"+ json[i][0] +"_</id></a></span></div></div></div></div>";
+                    var parent_card = "<div class=\"col s12 l4 offset-l4\"><div class=\"card\"><div class=\"card-content\" id=\"" + json[i][0] + "\"><span class=\"card-title\">" + json[i][1] + " "+ json[i][2]+"K "+json[i][3]+"K"+"<a class=\"waves-effect waves-teal btn-flat edit\" id=\"edit_" + json[i][0] + "\">edit<id>_"+ json[i][0] +"_</id></a><a class=\"waves-effect waves-teal btn-flat delete\" id=\"delete_" + json[i][0] + "\">delete<id>_"+ json[i][0] +"_</id></a></span></div></div></div>";
+                    var child_card = "<div class=\"row\"><div class=\"col s12\"><div class=\"card\"><div class=\"card-content\" id=\"" + json[i][0] + "\"><span class=\"card-title\">" + json[i][1] + " "+ json[i][2]+"K "+json[i][3]+"K"+"<a class=\"waves-effect waves-teal btn-flat edit\" id=\"edit_" + json[i][0] + "\">edit<id>_"+ json[i][0] +"_</id></a><a class=\"waves-effect waves-teal btn-flat delete\" id=\"delete_" + json[i][0] + "\">delete<id>_"+ json[i][0] +"_</id></a></span></div></div></div></div>";
                     if (json[i][5] == j) {
                         if (json[i][5] > 0) {
                             $("#" + json[i][4]).append(child_card);
